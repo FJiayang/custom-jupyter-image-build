@@ -1,2 +1,3 @@
 pandas
 matplotlib
+jupyterlab-language-pack-zh-CN
