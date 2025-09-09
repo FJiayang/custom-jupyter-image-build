@@ -15,7 +15,7 @@ RUN apt-get update && apt-get install -y unzip locales fonts-wqy-zenhei && \
     # 执行安装脚本
     curl -LsSf https://astral.sh/uv/install.sh | sh && \
     # 使用正确的源路径移动 uv
-    mv /home/jovyan/.local/bin/* /usr/local/bin/ && \
+    cp /home/jovyan/.local/bin/* /usr/local/bin/ && \
     # 清理 apt 缓存
     rm -rf /var/lib/apt/lists/*
 
