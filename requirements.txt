@@ -1,3 +1,7 @@
 pandas
 matplotlib
 jupyterlab-language-pack-zh-CN
+jupyterlab-lsp
+python-lsp-server[all]
+lckr-jupyterlab-variableinspector
+jupyterlab-git
