@@ -11,8 +11,7 @@ RUN apt-get update && apt-get install -y unzip && \
     # 执行安装脚本
     curl -LsSf https://astral.sh/uv/install.sh | sh && \
     # 使用正确的源路径移动 uv
-    mv /home/jovyan/.local/bin/uv /usr/local/bin/uv && \
-    mv /home/jovyan/.local/bin/uvx /usr/local/bin/uvx && \
+    mv /home/jovyan/.local/bin/* /usr/local/bin/ && \
     # 清理 apt 缓存
     rm -rf /var/lib/apt/lists/*
 
