@@ -11,7 +11,7 @@ ENV LANG=zh_CN.UTF-8 \
 USER root
 
 # 步骤 3: 安装 uv 及其依赖 (合并为单层以优化)
-RUN apt-get update && apt-get install -y unzip locales fonts-wqy-zenhei && \
+RUN apt-get update && apt-get install -y unzip locales fonts-wqy-zenhei iputils-ping && \
     # 执行安装脚本
     curl -LsSf https://astral.sh/uv/install.sh | sh && \
     # 使用正确的源路径移动 uv
