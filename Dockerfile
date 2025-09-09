@@ -8,10 +8,10 @@ USER root
 
 # 步骤 3: 安装 uv 及其依赖
 # 首先更新包列表并安装 unzip，这是 uv 安装脚本很可能需要的
-RUN apt-get update && apt-get install -y unzip && \
-    # 然后再执行安装脚本
-    curl -LsSf https://astral.sh/uv/install.sh | sh && \
-    mv /root/.cargo/bin/uv /usr/local/bin/uv && \
+RUN apt-get update && apt-get install -y unzip
+# 然后再执行安装脚本
+RUN curl -LsSf https://astral.sh/uv/install.sh | sh
+RUN mv /root/.cargo/bin/uv /usr/local/bin/uv && \
     # 清理 apt 缓存以减小镜像体积
     rm -rf /var/lib/apt/lists/*
 
