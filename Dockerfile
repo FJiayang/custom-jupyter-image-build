@@ -18,7 +18,8 @@ RUN apt-get update && apt-get install -y unzip locales fonts-wqy-zenhei iputils-
     cp /home/jovyan/.local/bin/* /usr/local/bin/ && \
     # 清理 apt 缓存
     rm -rf /var/lib/apt/lists/*
-
+# 安装支持可视化调试的xeus-python内核
+RUN conda install -y -c conda-forge xeus-python
 # 更新系统时区配置，供系统命令和工具使用
 RUN ln -snf /usr/share/zoneinfo/$TZ /etc/localtime && echo $TZ > /etc/timezone && \
     # 配置并生成中文 locale
