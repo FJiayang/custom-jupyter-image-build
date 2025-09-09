@@ -2,9 +2,6 @@
 
 name: Build and Push Jupyter Docker Image
 
-# 触发条件：
-# 1. 当有代码推送到 main 分支时
-# 2. 允许在 GitHub Actions 页面手动触发 (workflow_dispatch)
 on:
   push:
     branches:
@@ -16,15 +13,15 @@ jobs:
     runs-on: ubuntu-latest
     permissions:
       contents: read
-      packages: write # 需要写入 GitHub Packages 的权限
+      packages: write
 
     steps:
-      # 步骤 1: 检出你的代码
       - name: Checkout repository
         uses: actions/checkout@v4
 
-      # 步骤 2: 登录到 GitHub Container Registry (ghcr.io)
-      # 使用 GITHUB_TOKEN，这是一个由 GitHub Actions 自动创建的临时令牌
+      - name: Get current date for tagging
+        run: echo "DATE_TAG=$(date +'%Y%m%d')" >> $GITHUB_ENV
+
       - name: Log in to the Container registry
         uses: docker/login-action@v3
         with:
@@ -32,15 +29,21 @@ jobs:
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
 
-      # 步骤 3: 提取 Docker 镜像的元数据（如标签）
-      # 这会自动生成如 'latest', 'git-sha' 等标签
+      # 核心修改点在这里
       - name: Extract metadata (tags, labels) for Docker
         id: meta
         uses: docker/metadata-action@v5
         with:
-          images: ghcr.io/${{ github.repository }}
+          # 修改 'images' 参数，使用固定的镜像名
+          # github.repository_owner 会自动获取你的 GitHub 用户名或组织名
+          images: ghcr.io/${{ github.repository_owner }}/custom-jupyter-notebook
+          
+          # 标签规则保持不变
+          tags: |
+            type=raw,value=latest,enable={{is_default_branch}}
+            type=sha,format=short
+            type=raw,value=${{ env.DATE_TAG }}
 
-      # 步骤 4: 构建并推送 Docker 镜像
       - name: Build and push Docker image
         uses: docker/build-push-action@v5
         with:
