@@ -1,0 +1,50 @@
+# .github/workflows/build-and-push.yml
+
+name: Build and Push Jupyter Docker Image
+
+# 触发条件：
+# 1. 当有代码推送到 main 分支时
+# 2. 允许在 GitHub Actions 页面手动触发 (workflow_dispatch)
+on:
+  push:
+    branches:
+      - main
+  workflow_dispatch:
+
+jobs:
+  build-and-push:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      packages: write # 需要写入 GitHub Packages 的权限
+
+    steps:
+      # 步骤 1: 检出你的代码
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      # 步骤 2: 登录到 GitHub Container Registry (ghcr.io)
+      # 使用 GITHUB_TOKEN，这是一个由 GitHub Actions 自动创建的临时令牌
+      - name: Log in to the Container registry
+        uses: docker/login-action@v3
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      # 步骤 3: 提取 Docker 镜像的元数据（如标签）
+      # 这会自动生成如 'latest', 'git-sha' 等标签
+      - name: Extract metadata (tags, labels) for Docker
+        id: meta
+        uses: docker/metadata-action@v5
+        with:
+          images: ghcr.io/${{ github.repository }}
+
+      # 步骤 4: 构建并推送 Docker 镜像
+      - name: Build and push Docker image
+        uses: docker/build-push-action@v5
+        with:
+          context: .
+          push: true
+          tags: ${{ steps.meta.outputs.tags }}
+          labels: ${{ steps.meta.outputs.labels }}
